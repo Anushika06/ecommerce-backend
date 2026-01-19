@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: e-commerce-backend
+
+  mongodb:
+    uri: mongodb+srv://dbuser06:MongoPass123@cluster0.8dzl490.mongodb.net/e-commerce?retryWrites=true&w=majority
+
+server:
+  port: 8080
