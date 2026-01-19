@@ -89,4 +89,28 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrdersByUserId(String userId) {
         return orderRepository.findByUserId(userId);
     }
+    @Override
+    public void cancelOrder(String orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if (order.getStatus() == OrderStatus.PAID) {
+            throw new RuntimeException("Cannot cancel a paid order");
+        }
+
+        // Restore stock
+        for (OrderItem item : order.getItems()) {
+
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
+        }
+
+        // Update order status
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+    }
 }

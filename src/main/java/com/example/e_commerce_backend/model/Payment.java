@@ -17,5 +17,5 @@ public class Payment {
     private String orderId;
     private double amount;
     private PaymentStatus status;
-    private String provider; // MOCK or RAZORPAY
+    private String provider;
 }

@@ -1,5 +1,6 @@
 package com.example.e_commerce_backend.controller;
 
+import com.example.e_commerce_backend.dto.order.OrderResponseDto;
 import com.example.e_commerce_backend.model.Order;
 import com.example.e_commerce_backend.service.OrderService;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,17 @@ public class OrderController {
 
     // Create order
     @PostMapping
-    public Order createOrder(@RequestParam String userId) {
-        return orderService.createOrder(userId);
+    public OrderResponseDto createOrder(@RequestParam String userId) {
+
+        Order order = orderService.createOrder(userId);
+
+        return OrderResponseDto.builder()
+                .orderId(order.getId())
+                .userId(order.getUserId())
+                .items(order.getItems())
+                .totalAmount(order.getTotalAmount())
+                .status(order.getStatus())
+                .build();
     }
 
     // Get order by ID
@@ -33,4 +43,10 @@ public class OrderController {
     public List<Order> getOrdersByUser(@PathVariable String userId) {
         return orderService.getOrdersByUserId(userId);
     }
+
+    @PostMapping("/{orderId}/cancel")
+    public void cancelOrder(@PathVariable String orderId) {
+        orderService.cancelOrder(orderId);
+    }
+
 }

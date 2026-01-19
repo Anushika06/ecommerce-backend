@@ -25,18 +25,18 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart addToCart(String userId, String productId, int quantity) {
 
-        // 1. Validate product exists
+        // Validate product exists
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // 2. Fetch or create cart
+        // Fetch or create cart
         Cart cart = cartRepository.findByUserId(userId)
                 .orElse(Cart.builder()
                         .userId(userId)
                         .items(new ArrayList<>())
                         .build());
 
-        // 3. Check if product already in cart
+        // Check if product already in cart
         Optional<CartItem> existingItem = cart.getItems()
                 .stream()
                 .filter(item -> item.getProductId().equals(productId))
